@@ -232,53 +232,48 @@ The application follows a simple full-stack architecture.
                     │   Generated Study    │
                     │ Notes / Quiz / Tutor │
                     └──────────────────────┘
+```
+
+## 🔄 Application Workflow
+
+1. **User opens StudyMate AI**
+2. **User signs in or creates an account**
+3. **User uploads a PDF**
+4. **PDF.js extracts text in the browser**
+5. **User selects an AI feature**
+6. **Frontend sends an authenticated request**
+7. **Express backend verifies authentication**
+8. **Backend sends the study material to Gemini**
+9. **Gemini generates educational content**
+10. **Backend returns the result**
+11. **Frontend displays the generated content**
+
 ---
 
+## 💻 Technologies Used
 
-🔄 Application Workflow
-1. User opens StudyMate AI
-              ↓
-2. User signs in / creates an account
-              ↓
-3. User uploads a PDF
-              ↓
-4. PDF.js extracts text in the browser
-              ↓
-5. User selects an AI feature
-              ↓
-6. Frontend sends authenticated request
-              ↓
-7. Express backend verifies authentication
-              ↓
-8. Backend sends study material to Gemini
-              ↓
-9. Gemini generates educational content
-              ↓
-10. Backend returns the result
-              ↓
-11. Frontend displays the generated content
+| Technology | Purpose |
+|---|---|
+| **HTML5** | Application structure |
+| **CSS3** | Styling and responsive interface |
+| **Vanilla JavaScript** | Frontend application logic |
+| **Node.js** | Backend runtime |
+| **Express.js** | Backend REST API |
+| **Firebase Authentication** | User authentication |
+| **Firebase Admin SDK** | Backend authentication verification |
+| **Google Gemini API** | Generative AI |
+| **PDF.js** | Client-side PDF text extraction |
+| **Marked.js** | Markdown rendering |
+| **dotenv** | Environment variable management |
+| **CORS** | Cross-origin request handling |
+| **Render** | Application deployment |
+| **Git & GitHub** | Version control and source management |
+
 ---
 
-💻 Technologies Used
-| Technology              | Purpose                               |
-| ----------------------- | ------------------------------------- |
-| HTML5                   | Application structure                 |
-| CSS3                    | Styling and responsive interface      |
-| Vanilla JavaScript      | Frontend application logic            |
-| Node.js                 | Backend runtime                       |
-| Express.js              | Backend REST API                      |
-| Firebase Authentication | User authentication                   |
-| Firebase Admin SDK      | Backend authentication verification   |
-| Google Gemini API       | Generative AI                         |
-| PDF.js                  | Client-side PDF text extraction       |
-| Marked.js               | Markdown rendering                    |
-| dotenv                  | Environment variable management       |
-| CORS                    | Cross-origin request handling         |
-| Render                  | Application deployment                |
-| Git & GitHub            | Version control and source management |
- ---
-📂 Project Structure
+## 📂 Project Structure
 
+```text
 StudyMate-AI/
 │
 ├── index.html
@@ -296,111 +291,144 @@ StudyMate-AI/
 │
 └── sample-materials/
     └── sample-study-material.pdf
+```
+
 ---
-🚀 Getting Started
 
-Prerequisites
-Node.js v18 or higher
-A Google Gemini API key
-A Firebase project with Authentication enabled
+## 🚀 Getting Started
 
-1. Clone the Repository
+### Prerequisites
+
+- Node.js v18 or higher
+- A Google Gemini API key
+- A Firebase project
+- Firebase Authentication enabled
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/seemakurthisupraja/studymate-ai.git
-Navigate into the project:
 cd studymate-ai
-2. Install Dependencies
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
+```
+
 ---
-🔑 Environment Configuration
-Create a .env file in the project root.
+
+## 🔑 Environment Configuration
+
+Create a `.env` file in the project root.
+
+```env
 GEMINI_API_KEY=your_gemini_api_key
 PORT=3000
+```
+
 Firebase server credentials should also be configured through environment variables when deploying the backend.
+
+> ⚠️ Never commit `.env` or Firebase service account credentials to GitHub.
+
 ---
-🏃 Running Locally
-Start the application:
+
+## 🏃 Running Locally
+
+```bash
 npm start
-The application will run on:
+```
+
+The application will run at:
+
+```text
 http://localhost:3000
-For development with automatic server restart:
+```
+
+For development:
+
+```bash
 npm run dev
+```
+
 ---
-🧪 Testing the Application
+
+## 🧪 Testing the Application
 
 After signing in:
 
-Upload a PDF study material.
-Wait for PDF.js to extract the text.
-Click Generate Study Notes.
-Review the generated summary and key points.
-Check the exam questions.
-Open the Practice Quiz.
-Take the five-question quiz.
-Use Ask StudyMate to ask questions about the uploaded material.
-Try the copy, download, and print features.
+1. Upload a PDF study material.
+2. Wait for PDF.js to extract the text.
+3. Click **Generate Study Notes**.
+4. Review the generated summary and key points.
+5. Check the exam questions.
+6. Open the **Practice Quiz**.
+7. Take the five-question quiz.
+8. Use **Ask StudyMate** to ask questions about the uploaded material.
+9. Try the copy, download, and print features.
+
 ---
-🧠 AI Prompt Engineering
+
+## 🧠 AI Prompt Engineering
 
 StudyMate AI uses carefully structured prompts to generate consistent educational content.
 
-Study Notes Generation
+### Study Notes Generation
 
 The backend asks Gemini to generate:
 
-Summary
-Key points
-Definitions
-Two-mark questions
-Five-mark questions
-Ten-mark questions
-Quick revision points
+- Summary
+- Key points
+- Definitions
+- Two-mark questions
+- Five-mark questions
+- Ten-mark questions
+- Quick revision points
 
 The response is requested in structured JSON format so the frontend can reliably display the generated content.
----
 
-Practice Quiz Generation
+### Practice Quiz Generation
 
-The application asks Gemini to generate exactly:
+The application asks Gemini to generate:
 
-5 questions
-4 options per question
-Correct answer index
-Correct answer text
-Explanation
+- 5 questions
+- 4 options per question
+- Correct answer index
+- Correct answer text
+- Explanation
 
-This allows the frontend quiz engine to provide immediate feedback.
----
-
-Ask StudyMate
+### Ask StudyMate
 
 The AI tutor receives:
 
-Uploaded study material
-Student's question
-Relevant conversation context
+- Uploaded study material
+- Student's question
+- Relevant conversation context
 
 The prompt instructs Gemini to primarily use the uploaded material and clearly indicate when a question is outside the document.
+
 ---
 
-🔒 Security
+## 🔒 Security
 
 StudyMate AI follows several security practices:
 
-Gemini API credentials are stored on the backend.
-.env files are excluded from Git.
-Firebase ID tokens are verified by the backend.
-AI endpoints require authentication.
-Extracted PDF text is limited before being sent to Gemini.
-Firebase service account credentials are excluded from version control.
-Sensitive credentials are stored as environment variables during deployment.
+- Gemini API credentials are stored on the backend.
+- `.env` files are excluded from Git.
+- Firebase ID tokens are verified by the backend.
+- AI endpoints require authentication.
+- Extracted PDF text is limited before being sent to Gemini.
+- Firebase service account credentials are excluded from version control.
+- Sensitive credentials are stored as environment variables during deployment.
+
 ---
 
-☁️ Deployment
+## ☁️ Deployment
 
-StudyMate AI is deployed using Render.
+StudyMate AI is deployed using **Render**.
 
-The deployment uses:
-
+```text
 GitHub
    ↓
 Render
@@ -410,44 +438,44 @@ Node.js / Express Server
 StudyMate AI Frontend
    ↓
 Google Gemini API
+```
 
-Environment variables such as the Gemini API key and Firebase credentials are configured through the Render dashboard rather than committed to the repository.
+Environment variables are configured through the Render dashboard rather than committed to the repository.
+
 ---
 
-📱 Responsive Design
+## 📱 Responsive Design
 
-StudyMate AI uses responsive CSS so the application can adapt to different screen sizes, including:
+StudyMate AI uses responsive CSS for:
 
-Desktop computers
-Laptops
-Tablets
-Mobile phones
+- 🖥️ Desktop computers
+- 💻 Laptops
+- 📱 Tablets
+- 📱 Mobile phones
 
-The interface is designed to maintain usability across different viewport sizes.
 ---
 
-🔮 Future Enhancements
+## 🔮 Future Enhancements
 
-Possible future improvements include:
+- 🎙️ **Text-to-Speech Audio Notes**
+- 🗂️ **Interactive Flashcards**
+- 🌐 **Multi-Language Support**
+- 📊 **Advanced Study Analytics**
+- 📝 **Customizable Quiz Modes**
+- 📚 **Study History and Saved Notes**
+- 🤖 **Personalized Learning Recommendations**
+- 📤 **Export to Notion and Anki**
 
-🎙️ Text-to-Speech Audio Notes
-🗂️ Interactive Flashcards
-🌐 Multi-Language Support
-📊 Advanced Study Analytics
-📝 More customizable quiz modes
-📚 Study history and saved notes
-🤖 Personalized learning recommendations
-📤 Export to Notion and Anki
 ---
 
-📄 License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
+
 ---
 
-👩‍💻 Author
+## 👩‍💻 Author
 
-Supraja Seemakurthi
----
-StudyMate AI – Learn smarter with AI.
----
+**Supraja Seemakurthi**
+
+> StudyMate AI – Learn smarter with AI. 🎓
