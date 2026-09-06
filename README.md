@@ -256,7 +256,7 @@ The application follows a simple full-stack architecture.
 10. Backend returns the result
               ↓
 11. Frontend displays the generated content
-
+---
 
 💻 Technologies Used
 | Technology              | Purpose                               |
@@ -275,7 +275,7 @@ The application follows a simple full-stack architecture.
 | CORS                    | Cross-origin request handling         |
 | Render                  | Application deployment                |
 | Git & GitHub            | Version control and source management |
- 
+ ---
 📂 Project Structure
 
 StudyMate-AI/
@@ -295,7 +295,7 @@ StudyMate-AI/
 │
 └── sample-materials/
     └── sample-study-material.pdf
-
+---
 🚀 Getting Started
 
 Prerequisites
@@ -309,13 +309,13 @@ Navigate into the project:
 cd studymate-ai
 2. Install Dependencies
 npm install
-
+---
 🔑 Environment Configuration
 Create a .env file in the project root.
 GEMINI_API_KEY=your_gemini_api_key
 PORT=3000
 Firebase server credentials should also be configured through environment variables when deploying the backend.
-
+---
 🏃 Running Locally
 Start the application:
 npm start
@@ -323,7 +323,7 @@ The application will run on:
 http://localhost:3000
 For development with automatic server restart:
 npm run dev
-
+---
 🧪 Testing the Application
 
 After signing in:
@@ -337,7 +337,7 @@ Open the Practice Quiz.
 Take the five-question quiz.
 Use Ask StudyMate to ask questions about the uploaded material.
 Try the copy, download, and print features.
-
+---
 🧠 AI Prompt Engineering
 
 StudyMate AI uses carefully structured prompts to generate consistent educational content.
@@ -355,6 +355,7 @@ Ten-mark questions
 Quick revision points
 
 The response is requested in structured JSON format so the frontend can reliably display the generated content.
+---
 
 Practice Quiz Generation
 
@@ -367,6 +368,7 @@ Correct answer text
 Explanation
 
 This allows the frontend quiz engine to provide immediate feedback.
+---
 
 Ask StudyMate
 
@@ -377,6 +379,7 @@ Student's question
 Relevant conversation context
 
 The prompt instructs Gemini to primarily use the uploaded material and clearly indicate when a question is outside the document.
+---
 
 🔒 Security
 
@@ -389,7 +392,7 @@ AI endpoints require authentication.
 Extracted PDF text is limited before being sent to Gemini.
 Firebase service account credentials are excluded from version control.
 Sensitive credentials are stored as environment variables during deployment.
-
+---
 
 ☁️ Deployment
 
@@ -408,7 +411,7 @@ StudyMate AI Frontend
 Google Gemini API
 
 Environment variables such as the Gemini API key and Firebase credentials are configured through the Render dashboard rather than committed to the repository.
-
+---
 
 📱 Responsive Design
 
@@ -420,7 +423,7 @@ Tablets
 Mobile phones
 
 The interface is designed to maintain usability across different viewport sizes.
-
+---
 
 🔮 Future Enhancements
 
@@ -434,15 +437,16 @@ Possible future improvements include:
 📚 Study history and saved notes
 🤖 Personalized learning recommendations
 📤 Export to Notion and Anki
-
+---
 
 📄 License
 
 This project is licensed under the MIT License.
-
+---
 
 👩‍💻 Author
 
 Supraja Seemakurthi
-
+---
 StudyMate AI – Learn smarter with AI.
+---
