@@ -232,6 +232,7 @@ The application follows a simple full-stack architecture.
                     │   Generated Study    │
                     │ Notes / Quiz / Tutor │
                     └──────────────────────┘
+---
 
 
 🔄 Application Workflow
