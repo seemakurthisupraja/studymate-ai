@@ -1,0 +1,149 @@
+%PDF-1.4
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [3 0 R 4 0 R]
+  /Count 2
+>>
+endobj
+3 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 612 792]
+  /Resources <<
+    /Font <<
+      /F1 <<
+        /Type /Font
+        /Subtype /Type1
+        /BaseFont /Helvetica
+      >>
+      /F2 <<
+        /Type /Font
+        /Subtype /Type1
+        /BaseFont /Helvetica-Bold
+      >>
+    >>
+  >>
+  /Contents 5 0 R
+>>
+endobj
+4 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 612 792]
+  /Resources <<
+    /Font <<
+      /F1 <<
+        /Type /Font
+        /Subtype /Type1
+        /BaseFont /Helvetica
+      >>
+      /F2 <<
+        /Type /Font
+        /Subtype /Type1
+        /BaseFont /Helvetica-Bold
+      >>
+    >>
+  >>
+  /Contents 6 0 R
+>>
+endobj
+5 0 obj
+<< /Length 724 >>
+stream
+BT
+/F2 18 Tf
+50 720 Td
+(StudyMate AI: Operating Systems and Process Scheduling) Tj
+/F1 11 Tf
+0 -30 Td
+(Chapter 1: Process Management and CPU Scheduling) Tj
+0 -20 Td
+(An Operating System kernel manages the execution of active processes.) Tj
+0 -16 Td
+(A process transitions through states: Ready, Running, and Blocked.) Tj
+0 -24 Td
+/F2 13 Tf
+(Core CPU Scheduling Algorithms:) Tj
+/F1 11 Tf
+0 -18 Td
+(1. First-Come, First-Served \(FCFS\): Non-preemptive. Subject to the Convoy Effect.) Tj
+0 -16 Td
+(2. Shortest Job First \(SJF\): Optimal for minimizing average wait time.) Tj
+0 -16 Td
+(3. Round Robin \(RR\): Preemptive scheduling with a fixed Time Quantum \(10-100ms\).) Tj
+0 -16 Td
+(4. Multilevel Feedback Queue \(MLFQ\): Adjusts priorities based on CPU burst history.) Tj
+0 -24 Td
+/F2 13 Tf
+(Key Metrics:) Tj
+/F1 11 Tf
+0 -18 Td
+(Turnaround Time: Submission to completion time.) Tj
+0 -16 Td
+(Waiting Time: Total time spent in ready queue.) Tj
+0 -16 Td
+(Throughput: Processes completed per unit of time.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 690 >>
+stream
+BT
+/F2 18 Tf
+50 720 Td
+(Chapter 2: Google File System \(GFS\) Architecture) Tj
+/F1 11 Tf
+0 -30 Td
+(Google File System is a distributed file system designed for large data clusters.) Tj
+0 -20 Td
+/F2 13 Tf
+(Key Architectural Principles:) Tj
+/F1 11 Tf
+0 -18 Td
+(1. Commodity Hardware: Component failures are treated as the norm.) Tj
+0 -16 Td
+(2. Large Files: Optimized for files of gigabytes to terabytes in size.) Tj
+0 -16 Td
+(3. Append-Only Mutations: Multiple clients append concurrently.) Tj
+0 -16 Td
+(4. Large Chunk Size: Files are divided into 64 MB chunks.) Tj
+0 -24 Td
+/F2 13 Tf
+(GFS Components:) Tj
+/F1 11 Tf
+0 -18 Td
+(- Master Node: Stores all metadata in memory and coordinates chunkservers.) Tj
+0 -16 Td
+(- Chunkservers: Store 64MB chunks as Linux files with 3x replication.) Tj
+0 -16 Td
+(- Client: Communicates with Master for metadata, reads directly from Chunkservers.) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000378 00000 n 
+0000000641 00000 n 
+0000001416 00000 n 
+trailer
+<<
+  /Size 7
+  /Root 1 0 R
+>>
+startxref
+2157
+%%EOF

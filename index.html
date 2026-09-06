@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI – Paper &amp; Ink AI Study Lab</title>
+  <meta name="description" content="A premium digital study notebook and generative AI academic workspace. Turn PDFs into structured notes, exam questions, flash quizzes, and personal AI tutoring.">
+
+  <!-- Google Fonts: Plus Jakarta Sans, Outfit & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- PDF.js CDN (Client-side text extraction) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- Marked.js CDN (Markdown rendering for Q&A answers) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+
+  <!-- Firebase Web SDK (v10 Compat CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paper-ink-theme">
+
+  <!-- Educational Background Decorative Layer (Subtle Watermarks, Curves & Academic Illustrations) -->
+  <div class="academic-watermarks" aria-hidden="true">
+    <!-- Subtle Dotted Paper Texture Overlay -->
+    <div class="paper-dot-grid"></div>
+
+    <!-- Soft Abstract Curved Shapes -->
+    <svg class="watermark-curve curve-top-left" viewBox="0 0 700 700" fill="none">
+      <path d="M-100 220 C 120 80, 260 380, 520 220 C 680 120, 620 480, 780 620" stroke="currentColor" stroke-width="1.3" stroke-dasharray="8 6"/>
+    </svg>
+    <svg class="watermark-curve curve-bottom-right" viewBox="0 0 700 700" fill="none">
+      <path d="M120 680 C 320 500, 280 220, 580 120" stroke="currentColor" stroke-width="1.3" stroke-dasharray="5 5"/>
+    </svg>
+
+    <!-- Faint Books / Notebook Stack (Lower-Left) -->
+    <div class="watermark-svg wm-lower-left wm-float-slow">
+      <svg width="150" height="150" viewBox="0 0 120 120" fill="none" stroke="currentColor">
+        <path d="M22 76 L60 92 L98 76 L60 60 Z" stroke-width="1.5"/>
+        <path d="M22 76 V86 L60 102 L98 86 V76" stroke-width="1.5"/>
+        <path d="M24 56 L60 72 L96 56 L60 40 Z" stroke-width="1.5"/>
+        <path d="M24 56 V66 L60 82 L96 66 V56" stroke-width="1.5"/>
+        <path d="M30 36 L60 49 L90 36 L60 23 Z" stroke-width="1.5"/>
+        <path d="M30 36 V44 L60 57 L90 44 V36" stroke-width="1.5"/>
+        <line x1="60" y1="23" x2="60" y2="57" stroke-width="1.2"/>
+      </svg>
+    </div>
+
+    <!-- Faint Graduation Cap (Lower-Right) -->
+    <div class="watermark-svg wm-lower-right wm-float-reverse">
+      <svg width="155" height="155" viewBox="0 0 120 120" fill="none" stroke="currentColor">
+        <path d="M60 22 L12 48 L60 74 L108 48 Z" stroke-width="1.6"/>
+        <path d="M32 58 V86 C32 98 88 98 88 86 V58" stroke-width="1.5"/>
+        <path d="M98 52 V90 M94 90 H102" stroke-width="1.5"/>
+        <circle cx="60" cy="48" r="3" stroke-width="1.4"/>
+      </svg>
+    </div>
+
+    <!-- Faint Neural AI Knowledge Cluster (Upper-Right) -->
+    <div class="watermark-svg wm-upper-right wm-pulse-gentle">
+      <svg width="110" height="110" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <circle cx="30" cy="30" r="4" stroke-width="1.4"/>
+        <circle cx="70" cy="25" r="4" stroke-width="1.4"/>
+        <circle cx="80" cy="65" r="4" stroke-width="1.4"/>
+        <circle cx="40" cy="75" r="4" stroke-width="1.4"/>
+        <circle cx="50" cy="45" r="5" stroke-width="1.5"/>
+        <line x1="33" y1="32" x2="47" y2="43" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <line x1="67" y1="27" x2="54" y2="42" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <line x1="77" y1="63" x2="54" y2="48" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <line x1="42" y1="72" x2="48" y2="50" stroke-width="1.2" stroke-dasharray="3 3"/>
+      </svg>
+    </div>
+
+    <!-- Subtle Handwritten-Style Educational Words -->
+    <div class="watermark-word word-learn" aria-hidden="true">Learn</div>
+    <div class="watermark-word word-build" aria-hidden="true">Build</div>
+    <div class="watermark-word word-grow" aria-hidden="true">Grow</div>
+    <div class="watermark-word word-students" aria-hidden="true">Good Students</div>
+    <div class="watermark-word word-tomorrow" aria-hidden="true">Brighter Tomorrow</div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Floating Paper-Card Navbar -->
+  <header class="app-header">
+    <div class="header-container paper-card-nav">
+      <div class="brand">
+        <div class="brand-seal">◇</div>
+        <div class="brand-text">
+          <div class="brand-title-wrap">
+            <h1 class="brand-title">StudyMate <span class="brand-ink">AI</span></h1>
+            <span class="badge badge-paper">Gemini 3.5 Flash</span>
+          </div>
+          <p class="brand-lab-label">AI STUDY LAB</p>
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#uploadSection" class="nav-link active">Workspace</a>
+        <a href="#workflowSection" class="nav-link">How It Works</a>
+        <a href="#featuresSection" class="nav-link">Features</a>
+      </nav>
+
+      <div class="header-actions">
+        <div id="serverStatusBadge" class="status-badge status-loading" title="Checking AI backend connection">
+          <span class="status-dot"></span>
+          <span class="status-text">Checking Server...</span>
+        </div>
+        <button id="openSettingsBtn" class="btn-icon" title="API Key &amp; Configuration Settings" aria-label="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+
+        <!-- User Profile Dropdown / Sign-in indicator -->
+        <div id="userProfileArea" class="user-profile-area hidden">
+          <button id="userMenuBtn" class="btn-user-avatar" aria-haspopup="true" aria-expanded="false" title="User Account Menu">
+            <span id="userAvatar" class="avatar-badge">S</span>
+            <span id="userNavName" class="user-nav-name">Student</span>
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          
+          <div id="userDropdownMenu" class="user-dropdown-menu hidden" role="menu">
+            <div class="user-dropdown-header">
+              <div id="dropdownAvatar" class="dropdown-avatar-circle">S</div>
+              <div class="user-dropdown-info">
+                <div id="dropdownUserName" class="user-dropdown-name">Student</div>
+                <div id="dropdownUserEmail" class="user-dropdown-email">student@example.com</div>
+              </div>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <button id="menuSettingsBtn" class="user-dropdown-item" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <span>API &amp; Lab Settings</span>
+            </button>
+            <div class="user-dropdown-divider"></div>
+            <button id="logoutBtn" class="user-dropdown-item dropdown-danger" role="menuitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="navSignInPromptBtn" class="btn-nav-auth" title="Sign In">
+          <span>Sign In</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main     <!-- ====================================================================
+         AUTHENTICATION SECTION (Centered Educational Login Screen)
+         ==================================================================== -->
+    <section id="authSection" class="auth-section centered-auth-layout">
+      
+      <!-- Center Container -->
+      <div class="auth-center-container">
+        
+        <!-- Centered Login Card -->
+        <div class="paper-auth-card centered-login-card">
+          
+          <!-- StudyMate AI Brand Header -->
+          <div class="auth-card-brand-header centered-brand-header">
+            <div class="auth-card-emblem">
+              <span class="emblem-seal">◇</span>
+              <span class="emblem-sparkle">✦</span>
+            </div>
+            <div class="auth-brand-naming">
+              <h2 class="auth-brand-logo-text">StudyMate <span class="brand-ai-badge">AI</span></h2>
+              <p class="auth-brand-subcaption">YOUR STUDY COMPANION</p>
+            </div>
+            <div class="auth-welcome-block">
+              <h3 id="authCardHeadline" class="auth-card-heading">Welcome back!</h3>
+              <p id="authCardSubtext" class="auth-card-subtitle">Sign in to continue your learning journey.</p>
+            </div>
+          </div>
+
+          <!-- Auth Mode Tabs (Segmented Control) -->
+          <div class="auth-tabs-row" role="tablist" aria-label="Sign In or Register">
+            <button type="button" id="tabAuthLogin" class="auth-tab active" role="tab" aria-selected="true" aria-controls="loginForm">
+              Sign In
+            </button>
+            <button type="button" id="tabAuthSignup" class="auth-tab" role="tab" aria-selected="false" aria-controls="signupForm">
+              Create Account
+            </button>
+          </div>
+
+          <!-- Auth Status / Inline Alert Banner -->
+          <div id="authAlertBanner" class="auth-alert-banner hidden" role="alert" aria-live="polite">
+            <span id="authAlertIcon" class="auth-alert-icon">⚠️</span>
+            <span id="authAlertText" class="auth-alert-text">Error message here</span>
+            <button type="button" id="closeAuthAlertBtn" class="auth-alert-close" aria-label="Dismiss alert">✕</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="loginForm" class="auth-form" novalidate>
+            <div class="form-group">
+              <label for="loginEmail" class="form-label">Email address</label>
+              <div class="input-field-wrapper">
+                <span class="field-icon" aria-hidden="true">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="email" 
+                  id="loginEmail" 
+                  class="form-input input-padded-left" 
+                  placeholder="Enter your email" 
+                  required 
+                  autocomplete="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="label-with-action">
+                <label for="loginPassword" class="form-label">Password</label>
+                <a href="#forgot" id="forgotPasswordLink" class="forgot-password-link">Forgot password?</a>
+              </div>
+              <div class="input-field-wrapper input-password-wrapper">
+                <span class="field-icon" aria-hidden="true">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="loginPassword" 
+                  class="form-input input-padded-left password-input" 
+                  placeholder="Enter your password" 
+                  required 
+                  autocomplete="current-password">
+                <button type="button" class="btn-toggle-password" data-target="loginPassword" aria-label="Toggle password visibility" title="Show or hide password">
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="loginSubmitBtn" class="btn-auth-submit btn-primary-teal">
+              <span class="btn-text">Sign In &rarr;</span>
+              <span class="btn-spinner-icon hidden" aria-hidden="true">⟳</span>
+            </button>
+
+            <div class="auth-divider-line">
+              <span>or</span>
+            </div>
+
+            <!-- Google Sign-In Action -->
+            <div class="auth-social-area">
+              <button type="button" id="googleSignInBtn" class="btn-google-sign-in" aria-label="Continue with Google">
+                <svg class="google-icon-svg" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+            </div>
+
+            <div class="auth-switch-prompt">
+              <span>Don't have an account?</span>
+              <button type="button" id="switchToSignupBtn" class="link-auth-switch">Create account</button>
+            </div>
+          </form>
+
+          <!-- Signup Form (Hidden by default) -->
+          <form id="signupForm" class="auth-form hidden" novalidate>
+            <div class="form-group">
+              <label for="signupName" class="form-label">Full Name</label>
+              <div class="input-field-wrapper">
+                <span class="field-icon" aria-hidden="true">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="signupName" 
+                  class="form-input input-padded-left" 
+                  placeholder="Alex Morgan" 
+                  required 
+                  autocomplete="name">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupEmail" class="form-label">Email address</label>
+              <div class="input-field-wrapper">
+                <span class="field-icon" aria-hidden="true">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="email" 
+                  id="signupEmail" 
+                  class="form-input input-padded-left" 
+                  placeholder="Enter your email" 
+                  required 
+                  autocomplete="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signupPassword" class="form-label">Password</label>
+              <div class="input-field-wrapper input-password-wrapper">
+                <span class="field-icon" aria-hidden="true">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="signupPassword" 
+                  class="form-input input-padded-left password-input" 
+                  placeholder="At least 6 characters" 
+                  required 
+                  minlength="6" 
+                  autocomplete="new-password">
+                <button type="button" class="btn-toggle-password" data-target="signupPassword" aria-label="Toggle password visibility" title="Show or hide password">
+                  👁
+                </button>
+              </div>
+              <span class="form-helper-text">Minimum 6 characters</span>
+            </div>
+
+            <div class="form-group">
+              <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+              <div class="input-field-wrapper input-password-wrapper">
+                <span class="field-icon" aria-hidden="true">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="signupConfirmPassword" 
+                  class="form-input input-padded-left password-input" 
+                  placeholder="Re-enter your password" 
+                  required 
+                  minlength="6" 
+                  autocomplete="new-password">
+                <button type="button" class="btn-toggle-password" data-target="signupConfirmPassword" aria-label="Toggle password visibility" title="Show or hide password">
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="signupSubmitBtn" class="btn-auth-submit btn-primary-teal">
+              <span class="btn-text">Create Account &rarr;</span>
+              <span class="btn-spinner-icon hidden" aria-hidden="true">⟳</span>
+            </button>
+
+            <div class="auth-divider-line">
+              <span>or</span>
+            </div>
+
+            <div class="auth-social-area">
+              <button type="button" class="btn-google-sign-in" onclick="document.getElementById('googleSignInBtn').click();" aria-label="Continue with Google">
+                <svg class="google-icon-svg" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+            </div>
+
+            <div class="auth-switch-prompt">
+              <span>Already have an account?</span>
+              <button type="button" id="switchToLoginBtn" class="link-auth-switch">Sign In</button>
+            </div>
+          </form>
+
+          <!-- Security Badge -->
+          <div class="auth-security-badge">
+            <svg class="security-shield-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+            <span>Your data is secure and private. We use Firebase Authentication to keep your account safe.</span>
+          </div>
+
+          <!-- Authentication In-Progress Loading State -->
+          <div id="authLoadingState" class="auth-loading-state hidden" aria-live="polite">
+            <div class="academic-auth-spinner">
+              <div class="spinner-ring"></div>
+              <div class="spinner-center-glyph">✦</div>
+            </div>
+            <h4 id="authLoadingTitle">Authenticating...</h4>
+            <p id="authLoadingSub">Preparing your StudyMate workspace...</p>
+          </div>
+
+        </div>
+
+        <!-- Card Footer Note & Heart -->
+        <div class="auth-page-footer">
+          <p class="auth-page-footer-tagline">StudyMate AI &nbsp;&bull;&nbsp; Learn smarter with AI</p>
+          <div class="auth-page-footer-heart" aria-hidden="true">♥</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         PROTECTED STUDYMATE WORKSPACE (Hidden until authenticated)
+         ==================================================================== -->
+    <div id="appWorkspace" class="app-workspace hidden">
+
+    <!-- Modern AI Study Lab Hero Section -->
+    <section class="hero-section" id="heroSection">
+      <div class="hero-grid">
+        <div class="hero-left">
+          <div class="hero-label-pill">
+            <span class="label-star">✦</span>
+            <span>YOUR PERSONAL AI STUDY LAB</span>
+          </div>
+          <h2 class="hero-title">
+            Study Smarter.<br>
+            Let <span class="ink-highlight">AI</span> Handle the Heavy Work.
+          </h2>
+          <p class="hero-subtitle">
+            Upload study material &rarr; Generate notes &rarr; Prepare exam questions &rarr; Practice &rarr; Ask AI
+          </p>
+
+          <!-- Flow Breadcrumb Tag -->
+          <div class="hero-flow-pill">
+            <span class="flow-pill-item">Upload PDF</span>
+            <span class="flow-pill-arrow">&rarr;</span>
+            <span class="flow-pill-item">Smart Notes</span>
+            <span class="flow-pill-arrow">&rarr;</span>
+            <span class="flow-pill-item">Exam Questions</span>
+            <span class="flow-pill-arrow">&rarr;</span>
+            <span class="flow-pill-item">Practice Quiz</span>
+            <span class="flow-pill-arrow">&rarr;</span>
+            <span class="flow-pill-item">AI Tutor</span>
+          </div>
+        </div>
+
+        <!-- Stylized AI Intelligence Neural Constellation Visual -->
+        <div class="hero-right">
+          <div class="ai-intelligence-widget" aria-hidden="true">
+            <div class="ai-intelligence-card">
+              <div class="ai-widget-header">
+                <span class="widget-status-dot"></span>
+                <span class="widget-label">AI STUDY ENGINE &bull; GEMINI 3.5 FLASH</span>
+              </div>
+              <div class="ai-neural-graphic">
+                <svg viewBox="0 0 240 180" class="neural-network-svg">
+                  <!-- Animated Connection Lines to Central AI Core -->
+                  <line x1="45" y1="90" x2="120" y2="90" class="n-line n-line-active" />
+                  <line x1="95" y1="40" x2="120" y2="90" class="n-line n-line-active" />
+                  <line x1="175" y1="50" x2="120" y2="90" class="n-line n-line-active" />
+                  <line x1="185" y1="125" x2="120" y2="90" class="n-line n-line-active" />
+                  <line x1="95" y1="142" x2="120" y2="90" class="n-line n-line-active" />
+                  <!-- Subtle Inter-Node Perimeter Web -->
+                  <line x1="45" y1="90" x2="95" y2="40" class="n-line" />
+                  <line x1="95" y1="40" x2="175" y2="50" class="n-line" />
+                  <line x1="175" y1="50" x2="185" y2="125" class="n-line" />
+                  <line x1="185" y1="125" x2="95" y2="142" class="n-line" />
+                  <line x1="95" y1="142" x2="45" y2="90" class="n-line" />
+
+                  <!-- Central AI Node -->
+                  <g class="n-node-core" transform="translate(120, 90)">
+                    <circle r="26" class="core-pulse-circle" />
+                    <circle r="18" class="core-main-circle" />
+                    <text dy="5" text-anchor="middle" class="core-ai-text">AI</text>
+                  </g>
+
+                  <!-- Node 1: PDF -->
+                  <g class="n-node" transform="translate(45, 90)">
+                    <circle r="13" class="n-halo halo-teal" />
+                    <circle r="5.5" class="n-dot dot-teal" />
+                    <text dy="3" text-anchor="middle" class="n-text">PDF</text>
+                  </g>
+
+                  <!-- Node 2: Notes -->
+                  <g class="n-node" transform="translate(95, 40)">
+                    <circle r="13" class="n-halo halo-mint" />
+                    <circle r="5.5" class="n-dot dot-mint" />
+                    <text dy="3" text-anchor="middle" class="n-text">Notes</text>
+                  </g>
+
+                  <!-- Node 3: Exam -->
+                  <g class="n-node" transform="translate(175, 50)">
+                    <circle r="13" class="n-halo halo-coral" />
+                    <circle r="5.5" class="n-dot dot-coral" />
+                    <text dy="3" text-anchor="middle" class="n-text">Exam</text>
+                  </g>
+
+                  <!-- Node 4: Quiz -->
+                  <g class="n-node" transform="translate(185, 125)">
+                    <circle r="13" class="n-halo halo-teal" />
+                    <circle r="5.5" class="n-dot dot-teal" />
+                    <text dy="3" text-anchor="middle" class="n-text">Quiz</text>
+                  </g>
+
+                  <!-- Node 5: Tutor -->
+                  <g class="n-node" transform="translate(95, 142)">
+                    <circle r="13" class="n-halo halo-lavender" />
+                    <circle r="5.5" class="n-dot dot-lavender" />
+                    <text dy="3" text-anchor="middle" class="n-text">Tutor</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="ai-widget-footer">
+                <span class="widget-tag">CONTEXT GROUNDED</span>
+                <span class="widget-tag">MULTI-MODAL</span>
+                <span class="widget-tag">INSTANT RECALL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visually Attractive Connected AI Knowledge Flow -->
+      <div class="academic-workflow" id="workflowSection">
+        <div class="workflow-card">
+          <div class="wf-icon-wrap icon-teal">
+            <span class="wf-icon">📄</span>
+          </div>
+          <div class="wf-info">
+            <span class="wf-tag">STEP 01</span>
+            <h4>PDF</h4>
+          </div>
+        </div>
+
+        <div class="wf-track-connector">
+          <span class="wf-arrow-track">&rarr;</span>
+        </div>
+
+        <div class="workflow-card wf-highlight">
+          <div class="wf-icon-wrap icon-mint">
+            <span class="wf-icon">🧠</span>
+          </div>
+          <div class="wf-info">
+            <span class="wf-tag">STEP 02</span>
+            <h4>AI ANALYSIS</h4>
+          </div>
+        </div>
+
+        <div class="wf-track-connector">
+          <span class="wf-arrow-track">&rarr;</span>
+        </div>
+
+        <div class="workflow-card">
+          <div class="wf-icon-wrap icon-mustard">
+            <span class="wf-icon">📚</span>
+          </div>
+          <div class="wf-info">
+            <span class="wf-tag">STEP 03</span>
+            <h4>KNOWLEDGE</h4>
+          </div>
+        </div>
+
+        <div class="wf-track-connector">
+          <span class="wf-arrow-track">&rarr;</span>
+        </div>
+
+        <div class="workflow-card wf-accent">
+          <div class="wf-icon-wrap icon-coral">
+            <span class="wf-icon">🎯</span>
+          </div>
+          <div class="wf-info">
+            <span class="wf-tag">STEP 04</span>
+            <h4>EXAM READY</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Card: Centerpiece Study Material Drop Zone -->
+    <section class="upload-section" id="uploadSection">
+      <div class="card notebook-upload-card">
+        <!-- Decorative Paper Clip Element -->
+        <div class="paper-clip-decoration" aria-hidden="true">
+          <div class="clip-loop"></div>
+        </div>
+
+        <div class="notebook-sheet-header">
+          <div class="notebook-ruler-marks">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span class="notebook-sheet-title">STUDY MATERIAL INGESTION ZONE</span>
+        </div>
+
+        <div id="dropzone" class="dropzone notebook-dropzone" tabindex="0" role="button" aria-label="Upload PDF Document">
+          <input type="file" id="pdfFileInput" accept="application/pdf" class="file-input" hidden>
+          
+          <!-- Animated Scanning Light Line (On Dragover) -->
+          <div class="notebook-scanline" aria-hidden="true"></div>
+
+          <!-- Default Upload State -->
+          <div class="dropzone-content" id="dropzonePrompt">
+            <div class="academic-doc-art">
+              <div class="art-shadow-sheet"></div>
+              <div class="art-main-sheet">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <line x1="10" y1="9" x2="8" y2="9"></line>
+                </svg>
+                <span class="art-quill">✏</span>
+              </div>
+            </div>
+
+            <h3 class="upload-heading">Bring Your Study Material</h3>
+            <p class="upload-sub">Drop your PDF here and StudyMate will turn it into an intelligent study workspace.</p>
+
+            <div class="upload-actions-row">
+              <button type="button" class="btn-browse-pdf">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Browse PDF</span>
+              </button>
+              <span class="or-drag-text">or drag &amp; drop</span>
+            </div>
+
+            <div class="trust-indicators-row">
+              <span class="trust-item"><span class="trust-mark">✓</span> PDF supported</span>
+              <span class="trust-item"><span class="trust-mark">✓</span> Client-side extraction</span>
+              <span class="trust-item"><span class="trust-mark">✓</span> AI powered</span>
+              <span class="trust-item"><span class="trust-mark">✓</span> Up to 25 MB</span>
+            </div>
+          </div>
+
+          <!-- Extracting State -->
+          <div id="extractingState" class="extracting-state hidden">
+            <div class="quill-spinner"></div>
+            <h4 id="extractingTitle" class="extracting-title">Reading Document Pages...</h4>
+            <p id="extractingProgress" class="extracting-sub">Extracting text via client-side PDF.js...</p>
+            <div class="progress-bar-container">
+              <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Document Ready State -->
+          <div id="fileInfoState" class="file-info-state hidden">
+            <div class="study-document-card">
+              <div class="doc-badge-paper">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span class="doc-badge-type">PDF</span>
+              </div>
+
+              <div class="doc-main-details">
+                <div class="doc-title-line">
+                  <div class="doc-name-wrap">
+                    <span id="fileNameDisplay" class="doc-name">document.pdf</span>
+                    <span class="doc-status-pill"><span class="doc-status-dot"></span>✓ Ready for AI Generation</span>
+                  </div>
+                  <button id="removeFileBtn" class="btn-remove-sheet" title="Remove PDF">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <span>Remove</span>
+                  </button>
+                </div>
+
+                <div class="doc-stats-line">
+                  <span class="stat-pill"><strong id="fileSizeDisplay">0 KB</strong></span>
+                  <span class="stat-pill"><strong id="pageCountDisplay">0 Pages</strong></span>
+                  <span class="stat-pill"><strong id="wordCountDisplay">0 Words</strong></span>
+                  <span class="stat-pill"><strong id="readingTimeDisplay">0 min read</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Bar Below Scanner -->
+        <div class="notebook-action-bar">
+          <div class="action-bar-left sample-material-group">
+            <span class="sample-callout">Want to see it in action?</span>
+            <button id="loadSampleDocBtn" class="btn-sample-study">
+              <span>⚡ Load Sample: Operating Systems &amp; GFS</span>
+            </button>
+          </div>
+
+          <div class="action-bar-right primary-actions-wrapper">
+            <span class="cta-microcopy">Ready? Turn this document into an AI-powered study guide.</span>
+            <div class="primary-actions-group">
+              <button id="viewExtractedTextBtn" class="btn btn-action-secondary hidden">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>View Text</span>
+              </button>
+              <button id="generateNotesBtn" class="btn btn-generate-primary" disabled>
+                <span class="btn-ai-sparkle">✨</span>
+                <span class="btn-label-text">Generate Study Notes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 Academic Feature Cards -->
+    <section class="features-section" id="featuresSection">
+      <div class="editorial-section-title">
+        <span class="section-tag">✦ ACADEMIC LAB ARTIFACTS</span>
+        <h3 class="section-title-text">Everything You Need For University &amp; Exam Success</h3>
+      </div>
+
+      <div class="index-cards-grid">
+        <div class="index-card card-teal">
+          <div class="index-card-header">
+            <span class="index-card-tag tag-teal">INDEX CARD 01</span>
+            <span class="index-card-icon">📄</span>
+          </div>
+          <h4>PDF &rarr; Smart Notes</h4>
+          <p>Turn long study material into structured notes with key concepts and intuitive takeaways.</p>
+        </div>
+
+        <div class="index-card card-coral">
+          <div class="index-card-header">
+            <span class="index-card-tag tag-coral">INDEX CARD 02</span>
+            <span class="index-card-icon">🎯</span>
+          </div>
+          <h4>Exam Ready</h4>
+          <p>Generate 2, 5 and 10-mark questions with structured model answers and key marking points.</p>
+        </div>
+
+        <div class="index-card card-mustard">
+          <div class="index-card-header">
+            <span class="index-card-tag tag-mustard">INDEX CARD 03</span>
+            <span class="index-card-icon">🧪</span>
+          </div>
+          <h4>Practice Quiz</h4>
+          <p>Test your understanding with AI-generated MCQs, instant feedback, and conceptual reasoning.</p>
+        </div>
+
+        <div class="index-card card-mint">
+          <div class="index-card-header">
+            <span class="index-card-tag tag-mint">INDEX CARD 04</span>
+            <span class="index-card-icon">💬</span>
+          </div>
+          <h4>AI Tutor</h4>
+          <p>Ask questions and get simple explanations in friendly language, with real-world analogies.</p>
+        </div>
+      </div>
+
+      <!-- Unique Knowledge Map Visual Element -->
+      <div class="academic-knowledge-map">
+        <div class="kmap-editorial">
+          <span class="kmap-label">KNOWLEDGE ARCHITECTURE</span>
+          <h4>One document. Multiple ways to learn.</h4>
+          <p>StudyMate parses textbook and lecture material into modular learning resources.</p>
+        </div>
+
+        <div class="kmap-tree-visual">
+          <div class="kmap-root">
+            <span class="kmap-node-icon">🧠</span>
+            <span class="kmap-node-text">AI Engine</span>
+          </div>
+          <div class="kmap-branches-row">
+            <div class="kmap-leaf"><span>📚 Notes</span></div>
+            <div class="kmap-leaf"><span>🎯 Exam Qs</span></div>
+            <div class="kmap-leaf"><span>🧪 Quiz</span></div>
+          </div>
+          <div class="kmap-stem-down">
+            <span class="kmap-stem-icon">📄</span>
+            <span class="kmap-stem-text">PDF Study Material</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Error Banner -->
+    <div id="errorBanner" class="error-banner hidden" role="alert">
+      <div class="error-banner-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      </div>
+      <div class="error-banner-content">
+        <h4 id="errorBannerTitle">Action Required</h4>
+        <p id="errorBannerMessage">An error occurred.</p>
+      </div>
+      <div class="error-banner-actions">
+        <button id="errorBannerRetryBtn" class="btn-paper-retry hidden">Retry</button>
+        <button id="closeErrorBannerBtn" class="error-banner-close" aria-label="Close error">✕</button>
+      </div>
+    </div>
+
+    <!-- AI Generation Screen: Modern AI Study Session Experience -->
+    <div id="generationLoader" class="generation-loader hidden">
+      <div class="card study-session-card">
+        <!-- Central Animated AI Study Engine Visualization -->
+        <div class="ai-study-engine-visual" aria-hidden="true">
+          <div class="ai-study-orb-wrapper">
+            <div class="ai-study-orb-pulse"></div>
+            <div class="ai-study-orb-ring"></div>
+            <div class="ai-study-orb-core">
+              <span class="orb-core-icon">🧠</span>
+            </div>
+            <!-- Surrounding Connected Learning Nodes -->
+            <div class="orb-sat-node sat-pdf"><span class="sat-icon">📄</span><span class="sat-label">PDF</span></div>
+            <div class="orb-sat-node sat-concepts"><span class="sat-icon">💡</span><span class="sat-label">Concepts</span></div>
+            <div class="orb-sat-node sat-notes"><span class="sat-icon">📝</span><span class="sat-label">Notes</span></div>
+            <div class="orb-sat-node sat-questions"><span class="sat-icon">🎯</span><span class="sat-label">Questions</span></div>
+            <div class="orb-sat-node sat-quiz"><span class="sat-icon">🧪</span><span class="sat-label">Quiz</span></div>
+            <div class="orb-particle pt-1"></div>
+            <div class="orb-particle pt-2"></div>
+            <div class="orb-particle pt-3"></div>
+            <div class="orb-particle pt-4"></div>
+          </div>
+        </div>
+
+        <div class="session-header">
+          <div class="session-badge">
+            <span class="session-dot"></span>
+            <span>AI STUDY ENGINE &bull; ANALYZING</span>
+          </div>
+          <h3 id="loaderTitle" class="session-title">StudyMate is reading your material...</h3>
+          <p id="loaderSub" class="session-sub">Synthesizing textbook concepts, structuring exam questions, and formulating revision notes</p>
+        </div>
+
+        <!-- 5 Stages Progress Stepper with Checkmarks -->
+        <div class="loader-steps">
+          <div class="step-item active" id="step1">
+            <span class="step-check-mark">✓</span>
+            <span class="step-num">01</span>
+            <span class="step-text">Parsing Document</span>
+          </div>
+          <div class="step-item active" id="step2">
+            <span class="step-check-mark">✓</span>
+            <span class="step-num">02</span>
+            <span class="step-text">Understanding Concepts</span>
+          </div>
+          <div class="step-item" id="step3">
+            <span class="step-check-mark">✓</span>
+            <span class="step-num">03</span>
+            <span class="step-text">Building Smart Notes</span>
+          </div>
+          <div class="step-item" id="step4">
+            <span class="step-check-mark">✓</span>
+            <span class="step-num">04</span>
+            <span class="step-text">Creating Exam Questions</span>
+          </div>
+          <div class="step-item" id="step5">
+            <span class="step-check-mark">✓</span>
+            <span class="step-num">05</span>
+            <span class="step-text">Preparing Revision Sheet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generated Notes Dashboard: Digital Study Notebook -->
+    <section id="resultsSection" class="results-section hidden">
+      
+      <!-- Notebook Cover & Header -->
+      <div class="card notebook-header-sheet">
+        <div class="notebook-meta-block">
+          <div class="notebook-crumb-tag">
+            <span>📚 STUDY NOTEBOOK</span>
+          </div>
+          <h2 id="generatedTopicTitle" class="notebook-topic-title">Subject &amp; Topic Title</h2>
+        </div>
+
+        <div class="results-actions">
+          <button id="copyAllNotesBtn" class="btn btn-paper-action" title="Copy all notes to clipboard">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+            <span>Copy All</span>
+          </button>
+          <button id="downloadMarkdownBtn" class="btn btn-paper-action" title="Download Notes as Markdown (.md)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Export .MD</span>
+          </button>
+          <button id="printNotesBtn" class="btn btn-paper-action" title="Print or Save as PDF">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect width="12" height="8" x="6" y="14"></rect></svg>
+            <span>Print / Save PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Physical-Style Notebook Tabs Navigation -->
+      <nav class="notebook-tabs-bar" aria-label="Study Notes Navigation">
+        <button class="nav-tab active" data-tab="tab-summary">
+          <span class="tab-icon">📌</span>
+          <span>Summary</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-keypoints">
+          <span class="tab-icon">🧠</span>
+          <span>Key Points</span>
+          <span id="keyPointsBadge" class="tab-badge">0</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-definitions">
+          <span class="tab-icon">📖</span>
+          <span>Definitions</span>
+          <span id="definitionsBadge" class="tab-badge">0</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-exams">
+          <span class="tab-icon">🎯</span>
+          <span>Exam Questions</span>
+          <span class="tab-badge-accent">13 Qs</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-revision">
+          <span class="tab-icon">⚡</span>
+          <span>Quick Revision</span>
+        </button>
+        <button class="nav-tab nav-tab-quiz" data-tab="tab-quiz">
+          <span class="tab-icon">🧪</span>
+          <span>Practice Quiz</span>
+        </button>
+        <button class="nav-tab nav-tab-ask" data-tab="tab-ask">
+          <span class="tab-icon">💬</span>
+          <span>Ask StudyMate</span>
+        </button>
+      </nav>
+
+      <!-- Tab 1: Simple Summary (Readable Notebook Page) -->
+      <div id="tab-summary" class="tab-pane active">
+        <div class="card notebook-page-sheet">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <span class="sheet-sub-tag">AI GENERATED STUDY GUIDE</span>
+              <h3>📌 Summary</h3>
+            </div>
+            <button class="btn-copy-sheet" onclick="StudyMateApp.copySection('summaryText')" title="Copy summary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+              <span>Copy Section</span>
+            </button>
+          </div>
+          <div class="page-sheet-body">
+            <div id="summaryText" class="editorial-rich-text"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Key Points (Index-Card Style Cards) -->
+      <div id="tab-keypoints" class="tab-pane">
+        <div class="card notebook-page-sheet">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <span class="sheet-sub-tag">CORE PRINCIPLES &amp; TAKEAWAYS</span>
+              <h3>🧠 Key Points</h3>
+            </div>
+            <button class="btn-copy-sheet" onclick="StudyMateApp.copySection('keyPointsList')" title="Copy key points">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+              <span>Copy Section</span>
+            </button>
+          </div>
+          <div class="page-sheet-body">
+            <ul id="keyPointsList" class="keypoints-cards-grid"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Important Definitions (Glossary / Dictionary Style) -->
+      <div id="tab-definitions" class="tab-pane">
+        <div class="card notebook-page-sheet">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <span class="sheet-sub-tag">ACADEMIC GLOSSARY &amp; TERMINOLOGY</span>
+              <h3>📖 Definitions</h3>
+            </div>
+            <div class="glossary-filter-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="filter-search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" id="defSearchInput" placeholder="Search concepts..." class="input-glossary-filter">
+            </div>
+          </div>
+          <div class="page-sheet-body">
+            <div id="definitionsGrid" class="definitions-dictionary-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Exam Questions (Exam Preparation Book) -->
+      <div id="tab-exams" class="tab-pane">
+        <div class="card notebook-page-sheet">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <span class="sheet-sub-tag">EXAM PREPARATION BOOK</span>
+              <h3>🎯 Exam Questions</h3>
+            </div>
+          </div>
+
+          <!-- Mark Weight Subtabs with Academic Focus Indicators -->
+          <div class="marks-filter-row">
+            <button class="exam-subtab active" data-exam-type="all">ALL (13)</button>
+            <button class="exam-subtab" data-exam-type="twoMark">2 MARK &bull; Recall</button>
+            <button class="exam-subtab" data-exam-type="fiveMark">5 MARK &bull; Explain</button>
+            <button class="exam-subtab" data-exam-type="tenMark">10 MARK &bull; Analyze</button>
+          </div>
+
+          <div class="page-sheet-body">
+            <div id="examQuestionsContainer" class="exam-prep-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Quick Revision (Last-Minute Revision Card) -->
+      <div id="tab-revision" class="tab-pane">
+        <div class="card notebook-page-sheet revision-warm-sheet">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <div class="revision-header-row">
+                <span class="sheet-sub-tag">HIGH-YIELD CRAM SHEET</span>
+                <span class="exam-eve-pill">EXAM EVE MODE</span>
+              </div>
+              <h3>⚡ 5-MINUTE REVISION</h3>
+            </div>
+            <button class="btn-copy-sheet" onclick="StudyMateApp.copySection('quickRevisionList')" title="Copy quick revision">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+              <span>Copy Section</span>
+            </button>
+          </div>
+          <div class="page-sheet-body">
+            <div id="quickRevisionList" class="quick-revision-cards-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 6: Practice Quiz (Examination Paper Interface) -->
+      <div id="tab-quiz" class="tab-pane">
+        <div class="card notebook-page-sheet exam-paper-card">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <span class="sheet-sub-tag">ACTIVE RECALL TEST</span>
+              <h3 id="quizMainTitle">🧪 PRACTICE ARENA</h3>
+            </div>
+            <button id="regenerateQuizBtn" class="btn btn-secondary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+              <span>Generate New Quiz</span>
+            </button>
+          </div>
+
+          <div class="page-sheet-body">
+            <!-- Quiz Unloaded State -->
+            <div id="quizEmptyState" class="quiz-unloaded-box">
+              <div class="unloaded-icon">🎯</div>
+              <h4>Test Your Knowledge with AI-Generated MCQs</h4>
+              <p>Formulate 5 multiple-choice questions derived directly from your study document, complete with instant scoring and detailed reasoning.</p>
+              <button id="startQuizBtn" class="btn btn-primary-ink mt-3">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                <span>Generate 5-Question Quiz</span>
+              </button>
+            </div>
+
+            <!-- Quiz Loading Spinner -->
+            <div id="quizLoadingState" class="quiz-loading-state hidden">
+              <div class="quill-spinner"></div>
+              <h4>Formulating Quiz Questions from Document...</h4>
+              <p>Crafting balanced options, correct answers, and conceptual explanations</p>
+            </div>
+
+            <!-- Quiz Active Container -->
+            <div id="quizContainer" class="quiz-active-container hidden">
+              
+              <!-- Quiz Scoreboard / Progress -->
+              <div class="quiz-paper-scoreboard">
+                <div class="scoreboard-details">
+                  <span class="exam-subheading">PRACTICE ARENA</span>
+                  <div class="scoreboard-score-row">
+                    <span class="score-title">YOUR SCORE:</span>
+                    <span id="quizScoreDisplay" class="score-figure">0 / 5</span>
+                    <span id="quizAnsweredCount" class="score-answered">(0 of 5 answered)</span>
+                  </div>
+                </div>
+                <div class="scoreboard-controls">
+                  <button id="resetQuizBtn" class="btn-text">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>
+                    <span>Reset Answers</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Question Cards -->
+              <div id="quizQuestionsList" class="quiz-questions-list"></div>
+
+              <!-- Quiz Completed Card -->
+              <div id="quizCompletedBanner" class="quiz-verdict-card hidden">
+                <div class="verdict-icon">🏆</div>
+                <h4 id="quizVerdictTitle">Quiz Completed!</h4>
+                <p id="quizVerdictText">Great effort! Review any missed concepts above.</p>
+                <div class="verdict-actions">
+                  <button id="retakeQuizBtn" class="btn btn-primary-ink">Retake Quiz</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 7: Ask StudyMate (Personal AI Tutor Notebook) -->
+      <div id="tab-ask" class="tab-pane">
+        <div class="card notebook-page-sheet chat-tutor-sheet">
+          <div class="page-sheet-header">
+            <div class="sheet-title-wrap">
+              <span class="sheet-sub-tag">YOUR AI STUDY TUTOR</span>
+              <h3>💬 ASK STUDYMATE</h3>
+              <p class="chat-tutor-sub">Your AI Study Tutor &bull; Grounded in your document</p>
+            </div>
+            <button id="clearChatBtn" class="btn-text" title="Clear chat history">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Clear Chat</span>
+            </button>
+          </div>
+
+          <div class="page-sheet-body chat-notebook-layout">
+            
+            <!-- Quick Action Prompt Chips -->
+            <div class="prompt-chips-wrapper">
+              <span class="chips-label">Quick actions:</span>
+              <div class="prompt-chips">
+                <button class="chip" data-prompt="Explain the core mechanism in simple words with a real-world analogy.">💡 Explain Simply</button>
+                <button class="chip" data-prompt="Give me an intuitive real-world analogy to explain the hardest concept in this document.">⚖️ Give an Analogy</button>
+                <button class="chip" data-prompt="What are the most likely questions a professor could ask on an exam and how should I answer?">🎯 Exam Answer</button>
+                <button class="chip" data-prompt="Summarize the top 5 critical takeaways in concise bullet points.">⚡ Key Points</button>
+                <button class="chip" data-prompt="Give me a practical, real-world industry example of these concepts in action.">🔍 Real-world Example</button>
+              </div>
+            </div>
+
+            <!-- Chat Messages Log -->
+            <div id="chatMessages" class="chat-messages-container" role="log" aria-live="polite">
+              <div class="chat-message message-ai">
+                <div class="message-avatar">🎓</div>
+                <div class="message-content">
+                  <div class="message-sender-name">StudyMate AI Tutor</div>
+                  <p><strong>Hello! I'm StudyMate AI.</strong></p>
+                  <p>I have read your study document. Ask me any question, request simplification of complex topics, or ask for analogies and exam-tailored explanations!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <form id="chatForm" class="chat-input-form">
+              <div class="chat-input-wrapper">
+                <textarea 
+                  id="chatInput" 
+                  rows="2" 
+                  placeholder="Ask a question about this material (e.g., 'Explain the architecture in simple steps...')" 
+                  required></textarea>
+                <button type="submit" id="sendQuestionBtn" class="btn-send-ink" title="Send question" aria-label="Send">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+              <span class="chat-hint">Press <strong>Enter</strong> to send &bull; <strong>Shift + Enter</strong> for a new line</span>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    </div><!-- End #appWorkspace -->
+
+  </main>
+
+  <!-- Extracted Text Inspector Modal -->
+  <div id="textInspectorModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="inspectorModalTitle">
+    <div class="modal-backdrop" id="closeInspectorBackdrop"></div>
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="inspectorModalTitle">Extracted Document Text</h3>
+        <button id="closeInspectorBtn" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">This is the raw text extracted from your PDF using client-side PDF.js that is passed to Gemini for processing.</p>
+        <div class="text-preview-box">
+          <pre id="extractedRawTextDisplay">No text extracted yet.</pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="copyExtractedTextBtn" class="btn btn-secondary">Copy Extracted Text</button>
+        <button id="closeInspectorFooterBtn" class="btn btn-primary-ink">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings / API Key Modal -->
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal-backdrop" id="closeSettingsBackdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="settingsModalTitle">Settings &amp; API Configuration</h3>
+        <button id="closeSettingsBtn" class="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-group">
+          <label class="settings-label" for="customApiKeyInput">
+            <span>Gemini API Key (Optional Override)</span>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="link-external">Get free key ↗</a>
+          </label>
+          <input 
+            type="password" 
+            id="customApiKeyInput" 
+            placeholder="AIzaSy..." 
+            class="input-text"
+            autocomplete="off">
+          <p class="input-helper">
+            If you added your key to the backend <code>.env</code> file, you can leave this blank. Any key entered here will be saved in your browser session for direct testing.
+          </p>
+        </div>
+
+        <div class="info-callout">
+          <strong>🔒 Security &amp; Privacy:</strong>
+          <p>API keys should never be committed into public repositories. In production, StudyMate AI handles requests through its backend server using environment variables.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="saveSettingsBtn" class="btn btn-primary-ink">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal Professional Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="footer-symbol">◈</span>
+        <span class="footer-title">StudyMate AI</span>
+        <span class="footer-dot">&bull;</span>
+        <span class="footer-tag">AI STUDY LAB</span>
+      </div>
+      <p class="footer-subtext">Powered by Google Gemini &bull; Built for smarter learning</p>
+    </div>
+  </footer>
+
+  <!-- App Scripts -->
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

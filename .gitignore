@@ -1,0 +1,23 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables (contains sensitive API keys - DO NOT COMMIT)
+.env
+.env.local
+.env.*.local
+
+# Firebase Service Account Credentials (DO NOT COMMIT)
+server/serviceAccountKey.json
+serviceAccountKey.json
+*-serviceAccountKey*.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log

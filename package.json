@@ -1,0 +1,28 @@
+{
+  "name": "studymate-ai",
+  "version": "1.0.0",
+  "description": "StudyMate AI – Beginner-friendly AI Study Notes & Quiz Generator powered by Google Gemini and PDF.js",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "keywords": [
+    "generative-ai",
+    "gemini-api",
+    "study-notes",
+    "pdf-extractor",
+    "quiz-generator",
+    "education-ai"
+  ],
+  "author": "StudyMate AI Team",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase": "^12.18.0",
+    "firebase-admin": "^14.3.0"
+  }
+}
