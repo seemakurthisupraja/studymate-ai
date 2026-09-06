@@ -1,10 +1,12 @@
-# StudyMate AI 🎓
+# 🎓 StudyMate AI
 
 > An AI-powered study companion that transforms PDF study material into structured notes, exam questions, quizzes, and an interactive AI tutor.
 
-## 🌐 Live Application
+## 🌐 Live Demo
 
-**StudyMate AI** is deployed as a full-stack web application using **Render**.
+🚀 **[Open StudyMate AI](https://studymate-ai-f88e.onrender.com)**
+
+StudyMate AI is deployed as a full-stack web application using Render.
 
 The application allows students to:
 
