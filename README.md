@@ -1,291 +1,448 @@
-# StudyMate AI – AI Study Notes & Quiz Generator 🎓
+# StudyMate AI 🎓
 
-> **Turn your study material into smart notes, exam questions, flash quizzes, and an AI tutor powered by Google Gemini and PDF.js.**
+> An AI-powered study companion that transforms PDF study material into structured notes, exam questions, quizzes, and an interactive AI tutor.
 
-![StudyMate AI Banner](https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80)
+## 🌐 Live Application
 
----
+**StudyMate AI** is deployed as a full-stack web application using **Render**.
 
-## 📌 Table of Contents
-- [Project Description](#-project-description)
-- [Problem Statement](#-problem-statement)
-- [Key Objectives](#-key-objectives)
-- [Key Features](#-key-features)
-- [System Architecture & Workflow](#-system-architecture--workflow)
-- [Technologies Used](#-technologies-used)
-- [Project Structure](#-project-structure)
-- [Getting Started & Installation](#-getting-started--installation)
-- [Configuring the Gemini API Key](#-configuring-the-gemini-api-key)
-- [How to Run Locally](#-how-to-run-locally)
-- [Testing with Sample Materials](#-testing-with-sample-materials)
-- [AI Prompt Engineering Design](#-ai-prompt-engineering-design)
-- [Security & Best Practices](#-security--best-practices)
-- [Future Enhancements](#-future-enhancements)
-- [License](#-license)
+The application allows students to:
+
+- Upload PDF study material
+- Extract text directly in the browser
+- Generate AI-powered study notes
+- Generate exam-oriented questions
+- Take interactive quizzes
+- Ask questions about uploaded study material
+- Sign in securely using Firebase Authentication
 
 ---
 
-## 📖 Project Description
+## 📖 Project Overview
 
-**StudyMate AI** is a beginner-friendly, full-stack Generative AI web application created to help students, researchers, and lifelong learners study faster and more effectively. 
+**StudyMate AI** is a beginner-friendly full-stack Generative AI application designed to help students study more efficiently.
 
-Students can upload any textbook chapter, syllabus unit, research paper, or lecture slides in PDF format. Using client-side **PDF.js**, the application extracts the document text directly in the browser and connects to the **Google Gemini API** (`gemini-2.5-flash`) via a lightweight Node.js/Express backend. StudyMate generates structured study summaries, key points, terminology glossaries, mark-weighted exam questions, 5-question multiple-choice practice quizzes, and an interactive grounded Q&A tutor.
+Students can upload textbooks, lecture notes, research papers, syllabus material, or other educational PDFs. The application extracts the text using **PDF.js** and sends the extracted content to a Node.js/Express backend.
+
+The backend securely communicates with the **Google Gemini API** and generates structured educational content.
+
+The application combines:
+
+- Generative AI
+- PDF text extraction
+- Firebase Authentication
+- Node.js
+- Express.js
+- Vanilla JavaScript
+- HTML5
+- CSS3
 
 ---
 
 ## ❓ Problem Statement
 
-Students frequently encounter overwhelming quantities of unstructured study material (100+ page PDFs, dense slides, complex textbook chapters) before exams:
-1. **Time-consuming Manual Summaries:** Creating concise study sheets by hand takes hours of repetitive work.
-2. **Lack of Practice Exam Questions:** Students rarely know how professors will structure short-answer (2-mark), analytical (5-mark), or long-answer (10-mark) questions from textbook passages.
-3. **Passive Reading vs. Active Recall:** Simply re-reading documents leads to low retention; students need immediate active-recall quizzes.
-4. **Unanswered Clarifications:** When stuck on complex technical jargon, students need context-aware instant tutoring without losing their place.
+Students often have to study large amounts of unstructured material before examinations.
+
+Common problems include:
+
+1. Reading hundreds of pages takes considerable time.
+2. Creating concise study notes manually is difficult.
+3. Students may not know which topics are important for examinations.
+4. Creating practice questions manually is time-consuming.
+5. Students may need quick explanations of difficult concepts.
+
+**StudyMate AI** addresses these problems by converting study material into structured and interactive learning resources.
 
 ---
 
-## 🎯 Key Objectives
+## 🎯 Objectives
 
-* **Zero Complex ML / Pure Generative AI:** Avoid traditional, heavyweight ML model training or Python dependencies; leverage state-of-the-art Generative AI through modern API prompt engineering.
-* **Client-Side Document Parsing:** Process multi-page PDFs instantly using **PDF.js** without requiring server-side OCR daemons.
-* **Structured Output Guarantees:** Ensure all AI responses follow strict JSON schemas for dependable UI rendering.
-* **API Key Security:** Isolate secret API credentials on a lightweight backend rather than exposing them in client-side bundles.
-* **Beginner-Friendly Architecture:** Clean, readable Vanilla JavaScript and HTML5/CSS3 with detailed comments throughout.
+The main objectives of StudyMate AI are:
 
----
-
-## ✨ Key Features
-
-### 1. 📄 Client-Side PDF Upload & Text Extraction
-* Drag-and-drop zone or file picker for `.pdf` files.
-* Extracts multi-page text progressively in real time using **PDF.js**.
-* Displays file statistics: file size, page count, word count, and estimated reading time.
-* Built-in Raw Text Inspector modal to verify extracted text.
-
-### 2. 📝 Structured AI Study Notes
-* **Simple Summary:** Clear, student-friendly 2–3 paragraph overview explaining the core subject without jargon.
-* **Key Points:** 5–8 high-impact bulleted concepts with card hover effects.
-* **Definitions & Glossary:** Interactive searchable cards defining technical terms and formulas.
-* **Important Exam Questions Hub:**
-  * **5 Two-Mark Questions:** Quick definitions and basic conceptual tests.
-  * **5 Five-Mark Questions:** Analytical questions (e.g., comparing algorithms, step-by-step processes).
-  * **3 Ten-Mark Questions:** In-depth architectural evaluations and comprehensive essay outlines.
-  * *Expandable accordions with model answers and scoring guides.*
-* **Quick Revision Cram Sheet:** High-yield highlight points designed for last-minute review.
-
-### 3. 🧪 Interactive Practice Quiz Arena
-* Generates 5 Multiple-Choice Questions (MCQs) directly from the uploaded text.
-* Interactive 4-option cards (A, B, C, D) with single-click answering.
-* **Instant visual feedback:** Emerald green highlight for correct options, crimson red for incorrect selections.
-* Immediate animated explanation box explaining *why* the answer is correct.
-* Live score counter and celebratory completion verdict badge (with Retake option).
-
-### 4. 💬 Grounded "Ask StudyMate" AI Tutor
-* Interactive conversational assistant that answers student questions based strictly on the uploaded document.
-* Preset quick-prompt chips (*"Explain with real-world analogy"*, *"Key comparisons"*, *"Top exam topics"*).
-* Formats responses in rich Markdown (bolding, code blocks, lists) rendered with `marked.js`.
-
-### 5. 📥 Export & Print Capabilities
-* **Download as Markdown (`.md`):** Complete structured study guide file saved locally.
-* **Print / Save as PDF:** Tailored print stylesheet for clean, distraction-free hard copies.
-* **Copy All / Copy Section:** One-click clipboard copy buttons with toast notifications.
+- Convert PDF study material into concise study notes.
+- Generate important examination questions.
+- Provide quick revision material.
+- Generate interactive multiple-choice quizzes.
+- Provide an AI tutor for questions related to uploaded material.
+- Provide secure user authentication.
+- Keep the Gemini API key on the backend rather than exposing it in frontend code.
+- Provide a simple and beginner-friendly user interface.
 
 ---
 
-## 🏗️ System Architecture & Workflow
+# ✨ Key Features
 
-```mermaid
-flowchart TD
-    A[Student Uploads PDF] --> B[PDF.js Browser Engine]
-    B -->|Page-by-page text extraction| C[Extracted Text in Memory]
-    
-    C --> D[Express Backend Server /api/...]
-    
-    subgraph Backend_Gateway ["Node.js / Express Server"]
-        D --> E{API Key Resolver}
-        E -->|Loads from .env| F[Google Gemini API]
-        E -->|Optional Header Override| F
-    end
-    
-    subgraph Gemini_AI ["Google Gemini 3.5 Flash"]
-        F --> G[Generate Structured Notes JSON]
-        F --> H[Generate 5-MCQ Quiz JSON]
-        F --> I[Context-Grounded Q&A]
-    end
-    
-    G --> J[Study Notes UI Hub]
-    H --> K[Interactive Quiz Arena]
-    I --> L[Ask StudyMate Chat Log]
-    
-    J --> M[Markdown Export & Print]
-```
+## 1. 📄 PDF Upload and Text Extraction
+
+Users can upload PDF documents through the application.
+
+The application uses **PDF.js** to:
+
+- Read PDF files in the browser.
+- Extract text page by page.
+- Process multi-page study material.
+- Display document information such as page count and extracted text statistics.
+
+PDF processing is performed on the client side, reducing unnecessary file transfers to the backend.
 
 ---
 
-## 💻 Technologies Used
+## 2. 📝 AI Study Notes
 
-| Layer | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Frontend UI** | HTML5, CSS3, Vanilla JS (ES6+) | Clean, responsive, glassmorphic student-friendly interface |
-| **PDF Extraction** | [PDF.js](https://mozilla.github.io/pdf.js/) (v3.11 CDN) | Extracting textual content page-by-page in the browser |
-| **Markdown Parser**| [Marked.js](https://marked.js.org/) (CDN) | Parsing AI formatted Markdown into HTML |
-| **Backend Server** | Node.js, Express.js | API gateway, CORS handling, and environment isolation |
-| **Generative AI**  | [@google/generative-ai](https://www.npmjs.com/package/@google/generative-ai) | Official Google SDK for Gemini 3.5 Flash |
-| **Config / Security**| `dotenv` | Secure `.env` environment variable management |
+StudyMate AI generates structured study notes from uploaded material.
+
+Generated content includes:
+
+### Summary
+
+A simple student-friendly explanation of the uploaded material.
+
+### Key Points
+
+Important concepts and takeaways extracted from the study material.
+
+### Definitions
+
+Important technical terms and concepts with easy-to-understand explanations.
+
+### Exam Questions
+
+The application generates:
+
+- **5 Two-Mark Questions**
+- **5 Five-Mark Questions**
+- **3 Ten-Mark Questions**
+
+These questions are designed to help students prepare for different examination patterns.
+
+### Quick Revision
+
+A short collection of high-yield points for last-minute revision.
 
 ---
 
-## 📂 Project Structure
+## 3. 🧪 Interactive Practice Quiz
 
-```
+StudyMate AI can generate a practice quiz from uploaded study material.
+
+Each quiz contains:
+
+- 5 multiple-choice questions
+- 4 options per question
+- Correct answer identification
+- Answer explanations
+- Interactive answer selection
+- Score tracking
+- Quiz completion feedback
+- Retake functionality
+
+The quiz is designed to encourage **active recall** rather than passive reading.
+
+---
+
+## 4. 💬 Ask StudyMate – AI Tutor
+
+The application includes an interactive AI tutor.
+
+Students can ask questions about their uploaded study material.
+
+The AI tutor:
+
+- Uses the uploaded material as the primary context.
+- Explains difficult concepts in simple language.
+- Provides step-by-step explanations when appropriate.
+- Uses bullet points and structured responses.
+- Can provide examples and analogies.
+- Indicates when a question is outside the uploaded material.
+
+This makes StudyMate AI useful as a personal study assistant.
+
+---
+
+## 5. 🔐 Firebase Authentication
+
+StudyMate AI uses **Firebase Authentication** for user authentication.
+
+Supported authentication functionality includes:
+
+- User registration
+- Email/password sign-in
+- Google sign-in
+- Password reset
+- Authentication state handling
+- Protected AI operations
+
+AI-related backend endpoints require authentication before processing requests.
+
+---
+
+## 6. 📥 Export and Copy Features
+
+StudyMate AI provides convenient ways to use generated content outside the application.
+
+Users can:
+
+- Copy generated content.
+- Copy individual sections.
+- Download study material as Markdown.
+- Print study material.
+- Save the printed version as PDF using the browser's print functionality.
+
+---
+
+# 🏗️ System Architecture
+
+The application follows a simple full-stack architecture.
+
+```text
+                    ┌──────────────────────┐
+                    │       Student        │
+                    │    Web / Mobile      │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     StudyMate AI     │
+                    │      Frontend        │
+                    │ HTML / CSS / JS      │
+                    └──────────┬───────────┘
+                               │
+                    PDF.js Text Extraction
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │    Firebase Auth     │
+                    │   Authentication     │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Node.js + Express  │
+                    │     Backend API      │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │     Google Gemini    │
+                    │     Generative AI    │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   Generated Study    │
+                    │ Notes / Quiz / Tutor │
+                    └──────────────────────┘
+
+
+🔄 Application Workflow
+1. User opens StudyMate AI
+              ↓
+2. User signs in / creates an account
+              ↓
+3. User uploads a PDF
+              ↓
+4. PDF.js extracts text in the browser
+              ↓
+5. User selects an AI feature
+              ↓
+6. Frontend sends authenticated request
+              ↓
+7. Express backend verifies authentication
+              ↓
+8. Backend sends study material to Gemini
+              ↓
+9. Gemini generates educational content
+              ↓
+10. Backend returns the result
+              ↓
+11. Frontend displays the generated content
+
+
+💻 Technologies Used
+| Technology              | Purpose                               |
+| ----------------------- | ------------------------------------- |
+| HTML5                   | Application structure                 |
+| CSS3                    | Styling and responsive interface      |
+| Vanilla JavaScript      | Frontend application logic            |
+| Node.js                 | Backend runtime                       |
+| Express.js              | Backend REST API                      |
+| Firebase Authentication | User authentication                   |
+| Firebase Admin SDK      | Backend authentication verification   |
+| Google Gemini API       | Generative AI                         |
+| PDF.js                  | Client-side PDF text extraction       |
+| Marked.js               | Markdown rendering                    |
+| dotenv                  | Environment variable management       |
+| CORS                    | Cross-origin request handling         |
+| Render                  | Application deployment                |
+| Git & GitHub            | Version control and source management |
+ 
+📂 Project Structure
+
 StudyMate-AI/
-├── index.html                  # Main UI layout, upload dropzone, tabs & modals
-├── style.css                   # Modern design system (glassmorphism, animations, print CSS)
-├── script.js                   # Frontend controller (PDF.js, quiz engine, chat, API fetch)
-├── package.json                # Project dependencies & launch scripts
-├── .env.example                # Template for Gemini API key configuration
-├── .gitignore                  # Prevents committing node_modules & .env
-├── README.md                   # Full documentation & setup guide
+│
+├── index.html
+├── style.css
+├── script.js
+├── firebase-config.js
+├── package.json
+├── package-lock.json
+├── .env.example
+├── .gitignore
+├── README.md
+│
 ├── server/
-│   └── server.js               # Express API gateway connecting to Gemini API
+│   └── server.js
+│
 └── sample-materials/
-    └── sample-study-material.pdf # Ready-to-use sample PDF for testing
-```
+    └── sample-study-material.pdf
 
----
+🚀 Getting Started
 
-## 🚀 Getting Started & Installation
+Prerequisites
+Node.js v18 or higher
+A Google Gemini API key
+A Firebase project with Authentication enabled
 
-### Prerequisites
-* [Node.js](https://nodejs.org/) installed (v18.0.0 or higher recommended).
-* A free **Gemini API Key** from [Google AI Studio](https://aistudio.google.com/app/apikey).
-
-### 1. Clone or Open the Project
-Navigate to your project directory:
-```bash
-cd "AI study notes generator"
-```
-
-### 2. Install Node Dependencies
-Run the install command:
-```bash
+1. Clone the Repository
+git clone https://github.com/seemakurthisupraja/studymate-ai.git
+Navigate into the project:
+cd studymate-ai
+2. Install Dependencies
 npm install
-```
-*(On Windows PowerShell, if scripts are restricted, you can use `npm.cmd install`)*
 
----
+🔑 Environment Configuration
+Create a .env file in the project root.
+GEMINI_API_KEY=your_gemini_api_key
+PORT=3000
+Firebase server credentials should also be configured through environment variables when deploying the backend.
 
-## 🔑 Configuring the Gemini API Key
-
-### Option A: Server Environment File (Recommended)
-1. In the root directory, create a `.env` file by copying `.env.example`:
-   ```bash
-   cp .env.example .env
-   ```
-2. Open `.env` and paste your Gemini API key:
-   ```env
-   GEMINI_API_KEY=AIzaSyYourActualKeyHere12345
-   PORT=3000
-   ```
-
-### Option B: Runtime Settings in UI
-You can also click the **Settings (⚙️)** button in the top-right header of the web page and enter your key directly. It will be stored in your local browser session and sent securely to the local server via headers.
-
-> [!TIP]
-> Get a free API key at **[Google AI Studio](https://aistudio.google.com/app/apikey)**. The free tier offers 15 Requests Per Minute (RPM), which is more than enough for student use.
-
----
-
-## 🏃 How to Run Locally
-
-Start the Express application:
-```bash
+🏃 Running Locally
+Start the application:
 npm start
-```
-*(Or use `npm run dev` for auto-restart on code changes).*
-
-Open your browser and navigate to:
-```
+The application will run on:
 http://localhost:3000
-```
+For development with automatic server restart:
+npm run dev
 
----
+🧪 Testing the Application
 
-## 🧪 Testing with Sample Materials
+After signing in:
 
-You can test the application in two ways:
+Upload a PDF study material.
+Wait for PDF.js to extract the text.
+Click Generate Study Notes.
+Review the generated summary and key points.
+Check the exam questions.
+Open the Practice Quiz.
+Take the five-question quiz.
+Use Ask StudyMate to ask questions about the uploaded material.
+Try the copy, download, and print features.
 
-1. **One-Click Instant Sample:**
-   * On the home screen, click **"⚡ Load Sample: Operating Systems & GFS"**.
-   * Click **"Generate Study Notes"** or switch to the **"Practice Quiz"** tab to test immediately!
-2. **Uploading the Included Sample PDF:**
-   * Drag and drop `sample-materials/sample-study-material.pdf` into the upload box.
-   * Watch PDF.js extract the pages in real time.
-   * Click **"Generate Study Notes"**.
+🧠 AI Prompt Engineering
 
----
+StudyMate AI uses carefully structured prompts to generate consistent educational content.
 
-## 🧠 AI Prompt Engineering Design
+Study Notes Generation
 
-### 1. Study Notes Generation Prompt
-```text
-You are StudyMate AI, an expert academic tutor.
-Analyze the provided study material and return strictly valid JSON matching this schema:
-{
-  "topic": "Main topic title",
-  "summary": "Clear, student-friendly 2-3 paragraph explanation",
-  "keyPoints": ["Takeaway 1", "Takeaway 2", ...],
-  "definitions": [{"term": "Term", "explanation": "Simple explanation"}],
-  "examQuestions": {
-    "twoMark": [{"question": "...", "answer": "..."}],   // 5 questions
-    "fiveMark": [{"question": "...", "answer": "..."}],  // 5 questions
-    "tenMark": [{"question": "...", "answer": "..."}]    // 3 questions
-  },
-  "quickRevision": ["High yield bullet 1", ...]
-}
-```
+The backend asks Gemini to generate:
 
-### 2. Practice Quiz Generation Prompt
-```text
-Generate exactly 5 multiple-choice questions (MCQs) to test conceptual understanding:
-{
-  "quizTitle": "Subject Practice Quiz",
-  "questions": [
-    {
-      "id": 1,
-      "question": "Question text?",
-      "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
-      "correctAnswerIndex": 0,
-      "explanation": "Why this option is correct."
-    }
-  ]
-}
-```
+Summary
+Key points
+Definitions
+Two-mark questions
+Five-mark questions
+Ten-mark questions
+Quick revision points
 
-### 3. Ask StudyMate Q&A Prompt
-```text
-You are StudyMate AI, a patient tutor. Answer the student's question based strictly 
-and primarily on the uploaded material provided. If outside the scope, mention this 
-and give a helpful explanation. Format response cleanly using Markdown.
-```
+The response is requested in structured JSON format so the frontend can reliably display the generated content.
 
----
+Practice Quiz Generation
 
-## 🔒 Security & Best Practices
+The application asks Gemini to generate exactly:
 
-* **No Leaked Keys:** The frontend never embeds or exposes the `GEMINI_API_KEY`.
-* **`.gitignore` Protected:** `.env` and `node_modules` are excluded from version control.
-* **Payload Sanitation:** File uploads and extracted text sizes are validated before dispatching API requests to prevent memory overflows.
+5 questions
+4 options per question
+Correct answer index
+Correct answer text
+Explanation
 
----
+This allows the frontend quiz engine to provide immediate feedback.
 
-## 🔮 Future Enhancements
+Ask StudyMate
 
-* 🎙️ **Text-to-Speech Audio Notes:** Listen to summaries as audio podcasts on the go.
-* 🗂️ **Interactive Flashcards:** Flip cards with spaced repetition algorithms.
-* 🌐 **Multi-Language Translation:** Translate generated study notes into Spanish, Hindi, French, or German.
-* 📊 **Export to Notion & Anki:** Direct `.apkg` flashcard and Notion page exports.
+The AI tutor receives:
 
----
+Uploaded study material
+Student's question
+Relevant conversation context
 
-## 📄 License
-This project is open-source under the **MIT License**. Feel free to customize and expand it for your university projects, study groups, or personal learning!
+The prompt instructs Gemini to primarily use the uploaded material and clearly indicate when a question is outside the document.
+
+🔒 Security
+
+StudyMate AI follows several security practices:
+
+Gemini API credentials are stored on the backend.
+.env files are excluded from Git.
+Firebase ID tokens are verified by the backend.
+AI endpoints require authentication.
+Extracted PDF text is limited before being sent to Gemini.
+Firebase service account credentials are excluded from version control.
+Sensitive credentials are stored as environment variables during deployment.
+
+
+☁️ Deployment
+
+StudyMate AI is deployed using Render.
+
+The deployment uses:
+
+GitHub
+   ↓
+Render
+   ↓
+Node.js / Express Server
+   ↓
+StudyMate AI Frontend
+   ↓
+Google Gemini API
+
+Environment variables such as the Gemini API key and Firebase credentials are configured through the Render dashboard rather than committed to the repository.
+
+
+📱 Responsive Design
+
+StudyMate AI uses responsive CSS so the application can adapt to different screen sizes, including:
+
+Desktop computers
+Laptops
+Tablets
+Mobile phones
+
+The interface is designed to maintain usability across different viewport sizes.
+
+
+🔮 Future Enhancements
+
+Possible future improvements include:
+
+🎙️ Text-to-Speech Audio Notes
+🗂️ Interactive Flashcards
+🌐 Multi-Language Support
+📊 Advanced Study Analytics
+📝 More customizable quiz modes
+📚 Study history and saved notes
+🤖 Personalized learning recommendations
+📤 Export to Notion and Anki
+
+
+📄 License
+
+This project is licensed under the MIT License.
+
+
+👩‍💻 Author
+
+Supraja Seemakurthi
+
+StudyMate AI – Learn smarter with AI.
